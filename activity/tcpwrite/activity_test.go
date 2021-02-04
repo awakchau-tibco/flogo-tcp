@@ -18,7 +18,7 @@ func TestRegister(t *testing.T) {
 
 func TestEval(t *testing.T) {
 	settings := Settings{
-		Port: "9999",
+		Port: "8888",
 	}
 	initContext := test.NewActivityInitContext(settings, nil)
 	act, err := New(initContext)
@@ -28,7 +28,7 @@ func TestEval(t *testing.T) {
 
 	aInput := &Input{
 		StringData: "Hello\nthere",
-		// Delimiter:  "\n",
+		Delimiter:  "\n",
 	}
 
 	tc.SetInputObject(aInput)

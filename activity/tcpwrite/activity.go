@@ -12,7 +12,7 @@ import (
 
 // Activity ...
 type Activity struct {
-	connection net.Conn
+	settings *Settings
 }
 
 func init() {
@@ -38,20 +38,15 @@ func New(ctx activity.InitContext) (activity.Activity, error) {
 	if s.Network == "" {
 		s.Network = "tcp"
 	}
-	act.connection, err = net.Dial(s.Network, fmt.Sprintf("%s:%s", s.Host, s.Port))
-	if err != nil {
-		ctx.Logger().Errorf("Unable to dial the connection! %s", err.Error())
-		return nil, err
-	}
-	ctx.Logger().Debug("Connection is now open")
+	act.settings = s
 	return act, nil
 }
 
 // Eval ...
-func (a *Activity) Eval(context activity.Context) (done bool, err error) {
-	context.Logger().Debug("Executing TCP Write activity")
+func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
+	ctx.Logger().Debug("Executing TCP Write activity")
 	input := &Input{}
-	err = context.GetInputObject(input)
+	err = ctx.GetInputObject(input)
 	if err != nil {
 		return false, err
 	}
@@ -62,13 +57,19 @@ func (a *Activity) Eval(context activity.Context) (done bool, err error) {
 		delimiter := byte(r)
 		message = input.StringData[:strings.IndexByte(message, delimiter)]
 	}
-	defer a.connection.Close()
-	output.BytesWritten, err = a.connection.Write([]byte(message))
+	conn, err := net.Dial(a.settings.Network, fmt.Sprintf("%s:%s", a.settings.Host, a.settings.Port))
 	if err != nil {
-		context.Logger().Errorf("Unable to write the data! %s", err.Error())
+		ctx.Logger().Errorf("Unable to dial the connection! %s", err.Error())
 		return false, err
 	}
-	context.SetOutputObject(output)
-	context.Logger().Debug("TCP Write activity completed")
+	defer conn.Close()
+	ctx.Logger().Debug("Connection is now open")
+	output.BytesWritten, err = conn.Write([]byte(message))
+	if err != nil {
+		ctx.Logger().Errorf("Unable to write the data! %s", err.Error())
+		return false, err
+	}
+	ctx.SetOutputObject(output)
+	ctx.Logger().Debug("TCP Write activity completed")
 	return true, nil
 }
