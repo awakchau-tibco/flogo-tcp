@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net"
 	"strings"
-	"unicode/utf8"
 
 	"github.com/project-flogo/core/activity"
 	"github.com/project-flogo/core/data/metadata"
@@ -50,13 +49,15 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	if err != nil {
 		return false, err
 	}
-	output := &Output{}
 	message := input.StringData
-	if input.Delimiter != "" {
-		r, _ := utf8.DecodeRuneInString(input.Delimiter)
-		delimiter := byte(r)
-		message = input.StringData[:strings.IndexByte(message, delimiter)]
-	}
+
+	// if input.Delimiter != "" {
+	// 	r, _ := utf8.DecodeRuneInString(input.Delimiter)
+	// 	delimiter = byte(r)
+	// message = input.StringData[:strings.IndexByte(message, delimiter)]
+	// }
+
+	messages := strings.Split(message, input.Delimiter)
 	conn, err := net.Dial(a.settings.Network, fmt.Sprintf("%s:%s", a.settings.Host, a.settings.Port))
 	if err != nil {
 		ctx.Logger().Errorf("Unable to dial the connection! %s", err.Error())
@@ -64,12 +65,19 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	}
 	defer conn.Close()
 	ctx.Logger().Debug("Connection is now open")
-	output.BytesWritten, err = conn.Write([]byte(message))
-	if err != nil {
-		ctx.Logger().Errorf("Unable to write the data! %s", err.Error())
-		return false, err
+	output := &Output{}
+	output.BytesWritten = 0
+	for _, message := range messages {
+		n, err := conn.Write([]byte(message + input.Delimiter))
+		if err != nil {
+			ctx.Logger().Errorf("Unable to write the data! %s", err.Error())
+			return false, err
+		}
+		output.BytesWritten += n
 	}
+
 	ctx.SetOutputObject(output)
 	ctx.Logger().Debug("TCP Write activity completed")
+	ctx.Logger().Infof("Sent %d messages", len(messages))
 	return true, nil
 }

@@ -27,7 +27,7 @@ func TestEval(t *testing.T) {
 	tc := test.NewActivityContext(act.Metadata())
 
 	aInput := &Input{
-		StringData: "Hello\nthere",
+		StringData: "Message 1\nMessage 2\nMessage 3",
 		Delimiter:  "\n",
 	}
 
@@ -39,5 +39,5 @@ func TestEval(t *testing.T) {
 	aOutput := &Output{}
 	err = tc.GetOutputObject(aOutput)
 	assert.Nil(t, err)
-	tc.Logger().Info(aOutput.ToMap())
+	tc.Logger().Infof("Bytes Written: %d", aOutput.BytesWritten)
 }
