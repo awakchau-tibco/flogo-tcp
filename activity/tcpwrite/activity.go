@@ -50,13 +50,13 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	if err != nil {
 		return false, err
 	}
-	output := &Output{}
 	message := input.StringData
 	if input.Delimiter != "" {
 		r, _ := utf8.DecodeRuneInString(input.Delimiter)
 		delimiter := byte(r)
 		message = input.StringData[:strings.IndexByte(message, delimiter)]
 	}
+
 	conn, err := net.Dial(a.settings.Network, fmt.Sprintf("%s:%s", a.settings.Host, a.settings.Port))
 	if err != nil {
 		ctx.Logger().Errorf("Unable to dial the connection! %s", err.Error())
@@ -64,12 +64,14 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	}
 	defer conn.Close()
 	ctx.Logger().Debug("Connection is now open")
-	output.BytesWritten, err = conn.Write([]byte(message))
+	output := &Output{}
+
+	output.BytesWritten, err = conn.Write([]byte(message + input.Delimiter))
 	if err != nil {
 		ctx.Logger().Errorf("Unable to write the data! %s", err.Error())
 		return false, err
 	}
 	ctx.SetOutputObject(output)
-	ctx.Logger().Debug("TCP Write activity completed")
+	ctx.Logger().Infof("Written %d bytes", output.BytesWritten)
 	return true, nil
 }
