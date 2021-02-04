@@ -1,0 +1,70 @@
+{
+  "name": "tcpwrite-activity",
+  "version": "0.1.0",
+  "title": "TCP Write Activity",
+  "type": "flogo:activity",
+  "description": "Writes data to given TCP connection",
+  "ref": "github.com/awakchau-tibco/flogo-tcp",
+  "homepage": "https://github.com/awakchau-tibco/flogo-tcp/tree/master/activity/tcpwrite",
+  "settings": [
+    {
+      "name": "network",
+      "type": "string",
+      "required": false,
+      "allowed": [
+        "tcp",
+        "tcp4",
+        "tcp6",
+        "udp",
+        "udp4",
+        "udp6",
+        "ip",
+        "ip4",
+        "ip6",
+        "unix",
+        "unixgram",
+        "unixpacket"
+      ],
+      "description": "Type of the network. Supported types are: tcp, tcp4 (IPv4-only), tcp6 (IPv6-only), udp, udp4 (IPv4-only), udp6 (IPv6-only), ip, ip4 (IPv4-only), ip6 (IPv6-only), unix, unixgram and unixpacket"
+    },
+    {
+      "name": "host",
+      "type": "string",
+      "required": false,
+      "description": "Domain name or IP address of the host"
+    },
+    {
+      "name": "port",
+      "type": "string",
+      "required": true,
+      "description": "Literal port number or a service name like http, domain etc"
+    },
+    {
+      "name": "delimiter",
+      "type": "string",
+      "required": false,
+      "description": "Delimiter to break the input string data into individual messages"
+    },
+    {
+      "name": "timeout",
+      "type": "int",
+      "required": false,
+      "description": "Not implemented yet"
+    }
+  ],
+  "input": [
+    {
+      "name": "stringData",
+      "type": "string",
+      "required": true,
+      "description": "Data to be written"
+    }
+  ],
+  "output": [
+    {
+      "name": "bytesWritten",
+      "type": "int",
+      "description": "Number of bytes written"
+    }
+  ]
+}
