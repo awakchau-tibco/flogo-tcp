@@ -71,6 +71,7 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		ctx.Logger().Errorf("Unable to write the data! %s", err.Error())
 		return false, err
 	}
+
 	ctx.SetOutputObject(output)
 	ctx.Logger().Infof("Written %d bytes", output.BytesWritten)
 	return true, nil
