@@ -7,6 +7,11 @@
   "author": "awakchau",
   "ref": "github.com/awakchau-tibco/flogo-tcp/activity/tcpwrite",
   "homepage": "https://github.com/awakchau-tibco/flogo-tcp/tree/master/activity/tcpwrite",
+  "display": {
+    "category": "TCP",
+    "visible": true,
+    "description": "TCP/UDP operations"
+  },
   "settings": [
     {
       "name": "network",
@@ -30,7 +35,8 @@
       "display": {
         "name": "Network Type",
         "description": "Type of the network. Supported types are: tcp, tcp4 (IPv4-only), tcp6 (IPv6-only), udp, udp4 (IPv4-only), udp6 (IPv6-only), ip, ip4 (IPv4-only), ip6 (IPv6-only), unix, unixgram and unixpacket",
-        "type": "string",
+        "type": "dropdown",
+        "selection": "single",
         "visible": true
       }
     },
@@ -38,25 +44,55 @@
       "name": "host",
       "type": "string",
       "required": false,
-      "description": "Domain name or IP address of the host"
+      "description": "Domain name or IP address of the host",
+      "display": {
+        "name": "Host",
+        "description": "Domain name or IP address of the host",
+        "type": "string",
+        "visible": true,
+        "appPropertySupport": true,
+        "mappable": true
+      }
     },
     {
       "name": "port",
       "type": "string",
       "required": true,
-      "description": "Literal port number or a service name like http, domain etc"
+      "description": "Literal port number or a service name like http, domain etc",
+      "display": {
+        "name": "Port",
+        "description": "Literal port number or a service name like http, domain etc",
+        "type": "string",
+        "visible": true,
+        "appPropertySupport": true,
+        "mappable": true
+      }
     },
     {
       "name": "delimiter",
       "type": "string",
       "required": false,
-      "description": "Delimiter to break the input string data into individual messages"
+      "description": "Delimiter to break the input string data into individual messages",
+      "display": {
+        "name": "Delimiter",
+        "description": "Delimiter to break the input string data into individual messages",
+        "type": "string",
+        "visible": true,
+        "appPropertySupport": true,
+        "mappable": true
+      }
     },
     {
       "name": "timeout",
-      "type": "int",
+      "type": "number",
       "required": false,
-      "description": "Not implemented yet"
+      "description": "Not implemented yet",
+      "display": {
+        "name": "Timeout",
+        "description": "Not implemented yet",
+        "type": "number",
+        "visible": true
+      }
     }
   ],
   "input": [
