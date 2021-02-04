@@ -4,7 +4,7 @@
   "title": "TCP Write Activity",
   "type": "flogo:activity",
   "description": "Writes data to given TCP connection",
-  "ref": "github.com/awakchau-tibco/flogo-tcp",
+  "ref": "github.com/awakchau-tibco/flogo-tcp/activity/tcpwrite",
   "homepage": "https://github.com/awakchau-tibco/flogo-tcp/tree/master/activity/tcpwrite",
   "settings": [
     {
