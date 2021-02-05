@@ -4,17 +4,19 @@ import "github.com/project-flogo/core/data/coerce"
 
 // Settings ...
 type Settings struct {
-	Network string `md:"network"`       // The network type
-	Host    string `md:"host"`          // The host name or IP for TCP server.
-	Port    string `md:"port,required"` // The port to listen on
+	Network        string `md:"network"`        // The network type
+	Host           string `md:"host"`           // The host name or IP for TCP server.
+	Port           string `md:"port,required"`  // The port to listen on
+	WriteTimeoutMs int64  `md:"writeTimeoutMs"` // Write timeout for tcp write operation in milliseconds
 }
 
 // ToMap ...
 func (i *Settings) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"network": i.Network,
-		"host":    i.Host,
-		"port":    i.Port,
+		"network":        i.Network,
+		"host":           i.Host,
+		"port":           i.Port,
+		"writeTimeoutMs": i.WriteTimeoutMs,
 	}
 }
 
@@ -30,6 +32,10 @@ func (i *Settings) FromMap(values map[string]interface{}) error {
 		return err
 	}
 	i.Port, err = coerce.ToString(values["port"])
+	if err != nil {
+		return err
+	}
+	i.WriteTimeoutMs, err = coerce.ToInt64(values["writeTimeoutMs"])
 	if err != nil {
 		return err
 	}

@@ -7,11 +7,6 @@
   "author": "awakchau",
   "ref": "github.com/awakchau-tibco/flogo-tcp/activity/tcpwrite",
   "homepage": "https://github.com/awakchau-tibco/flogo-tcp/tree/master/activity/tcpwrite",
-  "display": {
-    "category": "TCP",
-    "visible": true,
-    "description": "TCP/UDP operations"
-  },
   "settings": [
     {
       "name": "network",
@@ -72,10 +67,10 @@
       "name": "delimiter",
       "type": "string",
       "required": false,
-      "description": "Delimiter to break the input string data into individual messages",
+      "description": "Delimiter to determine end of message",
       "display": {
         "name": "Delimiter",
-        "description": "Delimiter to break the input string data into individual messages",
+        "description": "Delimiter to determine end of message",
         "type": "string",
         "visible": true,
         "appPropertySupport": true,
@@ -83,13 +78,14 @@
       }
     },
     {
-      "name": "timeout",
+      "name": "writeTimeoutMs",
       "type": "number",
       "required": false,
-      "description": "Not implemented yet",
+      "value": 0,
+      "description": "Timeout for TCP write operation in milliseconds. Default is 0 (no timeout)",
       "display": {
-        "name": "Timeout",
-        "description": "Not implemented yet",
+        "name": "Write Timeout (in millis)",
+        "description": "Timeout for TCP write operation in milliseconds. Default is 0 (no timeout)",
         "type": "number",
         "visible": true
       }
