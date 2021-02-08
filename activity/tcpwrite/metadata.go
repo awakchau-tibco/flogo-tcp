@@ -1,6 +1,8 @@
 package tcpwrite
 
-import "github.com/project-flogo/core/data/coerce"
+import (
+	"github.com/project-flogo/core/data/coerce"
+)
 
 // Settings ...
 type Settings struct {
@@ -8,6 +10,7 @@ type Settings struct {
 	Host           string `md:"host"`           // The host name or IP for TCP server.
 	Port           string `md:"port,required"`  // The port to listen on
 	WriteTimeoutMs int64  `md:"writeTimeoutMs"` // Write timeout for tcp write operation in milliseconds
+	Delimiter      string `md:"delimiter"`      // Data delimiter for read and write
 }
 
 // ToMap ...
@@ -17,6 +20,7 @@ func (i *Settings) ToMap() map[string]interface{} {
 		"host":           i.Host,
 		"port":           i.Port,
 		"writeTimeoutMs": i.WriteTimeoutMs,
+		"delimiter":      i.Delimiter,
 	}
 }
 
@@ -39,31 +43,29 @@ func (i *Settings) FromMap(values map[string]interface{}) error {
 	if err != nil {
 		return err
 	}
+	i.Delimiter, err = coerce.ToString(values["delimiter"])
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 // Input ...
 type Input struct {
-	StringData string `md:"stringData,required"`
-	Delimiter  string `md:"delimiter"` // Data delimiter for read and write
+	StringData []byte `md:"stringData,required"`
 }
 
 // ToMap ...
 func (i *Input) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		"stringData": i.StringData,
-		"delimiter":  i.Delimiter,
 	}
 }
 
 // FromMap ...
 func (i *Input) FromMap(values map[string]interface{}) error {
 	var err error
-	i.StringData, err = coerce.ToString(values["stringData"])
-	if err != nil {
-		return err
-	}
-	i.Delimiter, err = coerce.ToString(values["delimiter"])
+	i.StringData, err = coerce.ToBytes(values["stringData"])
 	if err != nil {
 		return err
 	}

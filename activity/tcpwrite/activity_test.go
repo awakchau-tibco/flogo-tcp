@@ -18,7 +18,8 @@ func TestRegister(t *testing.T) {
 
 func TestEval(t *testing.T) {
 	settings := Settings{
-		Port: "8888",
+		Port:      "8888",
+		Delimiter: "\n",
 	}
 	initContext := test.NewActivityInitContext(settings, nil)
 	act, err := New(initContext)
@@ -27,8 +28,7 @@ func TestEval(t *testing.T) {
 	tc := test.NewActivityContext(act.Metadata())
 
 	aInput := &Input{
-		StringData: "Message 1\nMessage 2\nMessage 3",
-		Delimiter:  "\n",
+		StringData: []byte("Message 1\nMessage 2;Message 3"),
 	}
 
 	tc.SetInputObject(aInput)
@@ -39,5 +39,5 @@ func TestEval(t *testing.T) {
 	aOutput := &Output{}
 	err = tc.GetOutputObject(aOutput)
 	assert.Nil(t, err)
-	tc.Logger().Infof("Bytes Written: %d", aOutput.BytesWritten)
+	assert.Greater(t, aOutput.BytesWritten, 0)
 }
