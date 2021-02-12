@@ -26,10 +26,10 @@
         "unixgram",
         "unixpacket"
       ],
-      "description": "Type of the network. Supported types are: tcp, tcp4 (IPv4-only), tcp6 (IPv6-only), udp, udp4 (IPv4-only), udp6 (IPv6-only), ip, ip4 (IPv4-only), ip6 (IPv6-only), unix, unixgram and unixpacket",
+      "description": "Type of the network. Supported types are: tcp, tcp4 (IPv4-only), tcp6 (IPv6-only), udp, udp4 (IPv4-only), udp6 (IPv6-only), ip, ip4 (IPv4-only), ip6 (IPv6-only), unix, unixgram and unixpacket. Default is tcp",
       "display": {
         "name": "Network Type",
-        "description": "Type of the network. Supported types are: tcp, tcp4 (IPv4-only), tcp6 (IPv6-only), udp, udp4 (IPv4-only), udp6 (IPv6-only), ip, ip4 (IPv4-only), ip6 (IPv6-only), unix, unixgram and unixpacket",
+        "description": "Type of the network. Supported types are: tcp, tcp4 (IPv4-only), tcp6 (IPv6-only), udp, udp4 (IPv4-only), udp6 (IPv6-only), ip, ip4 (IPv4-only), ip6 (IPv6-only), unix, unixgram and unixpacket. Default is tcp",
         "type": "dropdown",
         "selection": "single",
         "visible": true
@@ -39,10 +39,10 @@
       "name": "host",
       "type": "string",
       "required": false,
-      "description": "Domain name or IP address of the host",
+      "description": "Domain name or IP address of the host. Default is localhost",
       "display": {
         "name": "Host",
-        "description": "Domain name or IP address of the host",
+        "description": "Domain name or IP address of the host. Default is localhost",
         "type": "string",
         "visible": true,
         "appPropertySupport": true,
@@ -67,10 +67,10 @@
       "name": "delimiter",
       "type": "string",
       "required": false,
-      "description": "Delimiter to determine end of message",
+      "description": "Delimiter will be appended to the message",
       "display": {
         "name": "Delimiter",
-        "description": "Delimiter to determine end of message",
+        "description": "Delimiter will be appended to the message",
         "type": "string",
         "visible": true,
         "appPropertySupport": true,

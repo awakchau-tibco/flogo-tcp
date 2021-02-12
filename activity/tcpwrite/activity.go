@@ -1,7 +1,6 @@
 package tcpwrite
 
 import (
-	"bytes"
 	"fmt"
 	"net"
 	"time"
@@ -42,13 +41,18 @@ func New(ctx activity.InitContext) (activity.Activity, error) {
 	if settings.Network == "" {
 		settings.Network = "tcp"
 	}
-	logger.Debug(fmt.Sprintf("Dialing connection using %s network...", settings.Network))
+	logger.Debugf("Dialing connection to %s network...", settings.Network)
 	activity.connection, err = net.Dial(settings.Network, fmt.Sprintf("%s:%s", settings.Host, settings.Port))
 	if err != nil {
 		logger.Errorf("Unable to dial the connection! Caused by %s", err.Error())
 		return nil, err
 	}
-	logger.Debug("Connection is now open")
+	if settings.WriteTimeoutMs != 0 {
+		deadline := time.Now().Add(time.Millisecond * time.Duration(settings.WriteTimeoutMs))
+		activity.connection.SetWriteDeadline(deadline)
+		logger.Debugf("Write timeout is set to %d milliseconds", settings.WriteTimeoutMs)
+	}
+	logger.Infof("Connected to %s network [%s:%s]", settings.Network, settings.Host, settings.Port)
 	activity.settings = settings
 	return activity, nil
 }
@@ -73,13 +77,9 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	}
 	message := input.StringData
 	if len(a.settings.Delimiter) > 0 {
-		message = input.StringData[:bytes.Index(input.StringData, []byte(a.settings.Delimiter))]
+		message = append(message, a.settings.Delimiter...)
 	}
 	output := &Output{}
-	if a.settings.WriteTimeoutMs != 0 {
-		deadline := time.Now().Add(time.Millisecond * time.Duration(a.settings.WriteTimeoutMs))
-		a.connection.SetWriteDeadline(deadline)
-	}
 	output.BytesWritten, err = a.connection.Write(message)
 	if err != nil {
 		logger.Errorf("Unable to write the data! %s", err.Error())

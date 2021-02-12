@@ -18,8 +18,9 @@ func TestRegister(t *testing.T) {
 
 func TestEval(t *testing.T) {
 	settings := Settings{
-		Port:      "8888",
-		Delimiter: "\n",
+		Port:           "8888",
+		Delimiter:      ";",
+		WriteTimeoutMs: 3000,
 	}
 	initContext := test.NewActivityInitContext(settings, nil)
 	act, err := New(initContext)
@@ -28,7 +29,7 @@ func TestEval(t *testing.T) {
 	tc := test.NewActivityContext(act.Metadata())
 
 	aInput := &Input{
-		StringData: []byte("Message 1\nMessage 2;Message 3"),
+		StringData: []byte("Message 1\nMessage 2;\nMessage 3"),
 	}
 
 	tc.SetInputObject(aInput)
