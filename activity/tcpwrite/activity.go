@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"time"
+	"unicode/utf8"
 
 	"github.com/project-flogo/core/activity"
 	"github.com/project-flogo/core/data/metadata"
@@ -77,8 +78,11 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	}
 	message := input.StringData
 	if len(a.settings.Delimiter) > 0 {
-		message = append(message, a.settings.Delimiter...)
+		logger.Debugf("Appending message with delimiter: [%+v]", a.settings.Delimiter)
+		r, _ := utf8.DecodeRuneInString(a.settings.Delimiter)
+		message = append(message, byte(r))
 	}
+
 	output := &Output{}
 	output.BytesWritten, err = a.connection.Write(message)
 	if err != nil {
